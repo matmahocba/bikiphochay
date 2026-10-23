@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GradeLevel, User } from '../../types';
 import { HARDCODED_TEACHER } from '../../data/seedData';
 import { loginUser, registerStudent } from '../../services/storageService';
@@ -25,6 +25,7 @@ interface AuthModalProps {
   onClose?: () => void;
   initialMode?: 'login' | 'register';
   initialRole?: 'teacher' | 'student';
+  initialGrade?: GradeLevel;
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({
@@ -33,6 +34,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   initialMode = 'login',
   initialRole = 'student',
+  initialGrade = 8,
 }) => {
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
   const [role, setRole] = useState<'teacher' | 'student'>(initialRole);
@@ -41,11 +43,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [selectedGrade, setSelectedGrade] = useState<GradeLevel>(8);
-  const [className, setClassName] = useState('8A1');
+  const [selectedGrade, setSelectedGrade] = useState<GradeLevel>(initialGrade);
+  const [className, setClassName] = useState(`${initialGrade}A1`);
 
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setMode(initialMode);
+      setRole(initialRole);
+      setSelectedGrade(initialGrade);
+      setClassName(`${initialGrade}A1`);
+      setError(null);
+      setSuccessMsg(null);
+    }
+  }, [isOpen, initialMode, initialRole, initialGrade]);
 
   if (!isOpen) return null;
 

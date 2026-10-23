@@ -8,7 +8,6 @@ import { GradeLevel, User } from './types';
 import {
   getCurrentUser,
   initializeStorage,
-  resetToSeedData,
   setCurrentUser,
 } from './services/storageService';
 import { HARDCODED_TEACHER, INITIAL_STUDENTS } from './data/seedData';
@@ -19,7 +18,6 @@ import { TeacherDashboard } from './components/teacher/TeacherDashboard';
 import { StudentDashboard } from './components/student/StudentDashboard';
 import { StudentProfileModal } from './components/student/StudentProfileModal';
 import { FirebaseGuideModal } from './components/common/FirebaseGuideModal';
-import { ConfirmDeleteModal } from './components/common/ConfirmDeleteModal';
 import {
   GraduationCap,
   ShieldCheck,
@@ -38,9 +36,9 @@ export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isStudentProfileModalOpen, setIsStudentProfileModalOpen] = useState(false);
   const [isFirebaseGuideOpen, setIsFirebaseGuideOpen] = useState(false);
-  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [authInitialRole, setAuthInitialRole] = useState<'teacher' | 'student'>('student');
   const [authInitialMode, setAuthInitialMode] = useState<'login' | 'register'>('login');
+  const [authInitialGrade, setAuthInitialGrade] = useState<GradeLevel>(8);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const showToast = (msg: string) => {
@@ -87,16 +85,6 @@ export default function App() {
     setUser(updatedUser);
   };
 
-  const handleResetData = () => {
-    setIsResetConfirmOpen(true);
-  };
-
-  const handleExecuteResetData = () => {
-    resetToSeedData();
-    setUser(getCurrentUser());
-    showToast('Đã khôi phục toàn bộ dữ liệu mẫu môn Tin học thành công!');
-  };
-
   return (
     <div className="min-h-screen bg-slate-100/70 text-slate-800 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
       {/* Thanh điều hướng Navbar */}
@@ -110,7 +98,6 @@ export default function App() {
         }}
         onSwitchUser={handleSwitchUser}
         onOpenFirebaseGuide={() => setIsFirebaseGuideOpen(true)}
-        onResetData={handleResetData}
         onOpenStudentProfile={() => setIsStudentProfileModalOpen(true)}
       />
 
@@ -129,9 +116,15 @@ export default function App() {
             />
           )
         ) : (
-          /* Giao diện Đăng nhập trực tiếp trên trang chủ khi truy cập ứng dụng */
+          /* Giao diện chính hiển thị Danh mục lớp học 6, 7, 8, 9 ở trung tâm */
           <LoginScreen
             onLoginSuccess={handleAuthSuccess}
+            onOpenAuth={(grade) => {
+              if (grade) setAuthInitialGrade(grade);
+              setAuthInitialRole('student');
+              setAuthInitialMode('login');
+              setIsAuthModalOpen(true);
+            }}
             initialRole={authInitialRole}
             initialMode={authInitialMode}
           />
@@ -164,6 +157,7 @@ export default function App() {
         isOpen={isAuthModalOpen}
         initialMode={authInitialMode}
         initialRole={authInitialRole}
+        initialGrade={authInitialGrade}
         onSuccess={handleAuthSuccess}
         onClose={() => setIsAuthModalOpen(false)}
       />
@@ -182,17 +176,6 @@ export default function App() {
       <FirebaseGuideModal
         isOpen={isFirebaseGuideOpen}
         onClose={() => setIsFirebaseGuideOpen(false)}
-      />
-
-      {/* Modal xác nhận khôi phục dữ liệu ban đầu an toàn */}
-      <ConfirmDeleteModal
-        isOpen={isResetConfirmOpen}
-        title="Xác nhận khôi phục dữ liệu gốc"
-        message="Hệ thống sẽ đặt lại toàn bộ bài học, danh sách câu hỏi và bài làm của môn Tin học Khối 6-9 về trạng thái mẫu ban đầu."
-        confirmLabel="Khôi phục ngay"
-        cancelLabel="Hủy"
-        onConfirm={handleExecuteResetData}
-        onClose={() => setIsResetConfirmOpen(false)}
       />
 
       {/* Toast thông báo toàn cục */}

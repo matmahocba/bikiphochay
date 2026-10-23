@@ -10,7 +10,6 @@ import {
   ShieldCheck,
   User as UserIcon,
   LogOut,
-  RotateCcw,
   Flame,
   UserCog,
 } from 'lucide-react';
@@ -22,7 +21,6 @@ interface NavbarProps {
   onOpenAuth: () => void;
   onSwitchUser: (user: User) => void;
   onOpenFirebaseGuide: () => void;
-  onResetData: () => void;
   onOpenStudentProfile?: () => void;
 }
 
@@ -32,7 +30,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAuth,
   onSwitchUser,
   onOpenFirebaseGuide,
-  onResetData,
   onOpenStudentProfile,
 }) => {
   const [hasFirebase, setHasFirebase] = useState(false);
@@ -99,17 +96,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             {hasFirebase && (
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
             )}
-          </button>
-
-          {/* Reset Demo Data button */}
-          <button
-            type="button"
-            onClick={onResetData}
-            className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition-colors"
-            title="Khôi phục lại toàn bộ dữ liệu mẫu ban đầu"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Dữ liệu mẫu</span>
           </button>
 
           {currentUser ? (
