@@ -1,0 +1,6 @@
+{
+  "name": "Học Tốt THCS - Ôn Tập Kiến Thức",
+  "description": "Ứng dụng ôn tập kiến thức dành cho học sinh THCS với phân quyền Giáo viên - Học sinh, đa dạng câu hỏi trắc nghiệm, kéo thả, tự luận và xuất báo cáo Excel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

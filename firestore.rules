@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Kiểm tra kết nối hệ thống
+    match /_system_check/{docId} {
+      allow read, write: if true;
+    }
+
+    // 2. Hồ sơ người dùng và học sinh
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    // 3. Bài học Tin học Khối 6, 7, 8, 9
+    match /lessons/{lessonId} {
+      allow read, write: if true;
+    }
+
+    // 4. Ngân hàng câu hỏi trắc nghiệm, điền khuyết, kéo thả, tự luận
+    match /questions/{questionId} {
+      allow read, write: if true;
+    }
+
+    // 5. Kết quả làm bài và báo cáo thống kê
+    match /submissions/{subId} {
+      allow read, write: if true;
+    }
+  }
+}
