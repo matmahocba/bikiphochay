@@ -57,10 +57,15 @@ export function initializeStorage(): void {
     localStorage.setItem(STORAGE_KEYS.LESSONS, JSON.stringify(INITIAL_LESSONS));
     localStorage.setItem(STORAGE_KEYS.QUESTIONS, JSON.stringify(INITIAL_QUESTIONS));
     localStorage.setItem(STORAGE_KEYS.SUBMISSIONS, JSON.stringify(INITIAL_SUBMISSIONS));
-    // Mặc định đăng nhập giáo viên để người dùng trải nghiệm ngay dashboard
-    localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(HARDCODED_TEACHER));
+    // Không tự động đăng nhập tài khoản để người dùng vào thẳng màn hình đăng nhập lúc truy cập
     localStorage.setItem(STORAGE_KEYS.INITIALIZED, 'true');
   } else {
+    // Đảm bảo phiên bản mới đưa người dùng về thẳng giao diện đăng nhập khi truy cập
+    const autoLegacyKey = 'thcs_review_cleared_legacy_autologin_v2';
+    if (!localStorage.getItem(autoLegacyKey)) {
+      localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+      localStorage.setItem(autoLegacyKey, 'true');
+    }
     // Đảm bảo thông tin giáo viên admin luôn đồng bộ tên mới nhất "Lê Quang Khánh"
     try {
       const rawUsers = localStorage.getItem(STORAGE_KEYS.USERS);
